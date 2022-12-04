@@ -1,10 +1,10 @@
 
 import root from '__GENERATED__/root.svelte';
-import { respond } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.528_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/server/index.js';
-import { set_paths, assets, base } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.528_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/paths.js';
-import { set_prerendering } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.528_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/env.js';
-import { set_private_env } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.528_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/env-private.js';
-import { set_public_env } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.528_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/env-public.js';
+import { respond } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.539_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/server/index.js';
+import { set_paths, assets, base } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.539_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/paths.js';
+import { set_prerendering } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.539_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/env.js';
+import { set_private_env } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.539_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/env-private.js';
+import { set_public_env } from '../../node_modules/.pnpm/@sveltejs+kit@1.0.0-next.539_svelte@3.52.0+vite@3.2.1/node_modules/@sveltejs/kit/src/runtime/env-public.js';
 
 const app_template = ({ head, body, assets, nonce }) => "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <link rel=\"icon\" href=\"" + assets + "/favicon.png\" />\n    <meta name=\"viewport\" content=\"width=device-width\" />\n    " + head + "\n  </head>\n  <body>\n    <div>" + body + "</div>\n  </body>\n</html>\n";
 
@@ -43,7 +43,7 @@ export class Server {
 					get request() {
 						throw new Error('request in handleError has been replaced with event. See https://github.com/sveltejs/kit/pull/3384 for details');
 					}
-				}) ?? { message: event.routeId != null ? 'Internal Error' : 'Not Found' };
+				}) ?? { message: event.route.id != null ? 'Internal Error' : 'Not Found' };
 			},
 			hooks: null,
 			manifest,
