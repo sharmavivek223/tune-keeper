@@ -1,0 +1,13 @@
+{
+	"/": [
+		"src/routes/+layout.js",
+		"src/routes/+layout.js"
+	],
+	"/about": [
+		"src/routes/about/+page.js",
+		"src/routes/+layout.js"
+	],
+	"/todos": [
+		"src/routes/todos/+page.server.js"
+	]
+}
