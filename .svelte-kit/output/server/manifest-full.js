@@ -4,7 +4,7 @@ export const manifest = {
 	assets: new Set([".nojekyll","favicon.png","robots.txt","svelte-welcome.png","svelte-welcome.webp"]),
 	mimeTypes: {".png":"image/png",".txt":"text/plain",".webp":"image/webp"},
 	_: {
-		entry: {"file":"_app/immutable/start-e46e01f2.js","imports":["_app/immutable/start-e46e01f2.js","_app/immutable/chunks/index-b4d30fc1.js","_app/immutable/chunks/singletons-22178ec5.js"],"stylesheets":[],"fonts":[]},
+		entry: {"file":"_app/immutable/start-44d093df.js","imports":["_app/immutable/start-44d093df.js","_app/immutable/chunks/index-b4d30fc1.js","_app/immutable/chunks/singletons-22178ec5.js"],"stylesheets":[],"fonts":[]},
 		nodes: [
 			() => import('./nodes/0.js'),
 			() => import('./nodes/1.js'),

@@ -6,12 +6,6 @@
   let microphoneStream = null;
   let audioData = null;
   let corrolatedSignal = null;
-  onMount(() => {
-    audioCtx = new window.AudioContext();
-    analyserNode = audioCtx.createAnalyser();
-    audioData = new Float32Array(analyserNode.fftSize);
-    corrolatedSignal = new Float32Array(analyserNode.fftSize);
-  });
   let localMaxima = new Array(10);
   let error = '';
   let pitch = 0;
@@ -49,6 +43,10 @@
   }
   const startDetection = () => {
     console.log('started');
+    audioCtx = new window.AudioContext();
+    analyserNode = audioCtx.createAnalyser();
+    audioData = new Float32Array(analyserNode.fftSize);
+    corrolatedSignal = new Float32Array(analyserNode.fftSize);
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
