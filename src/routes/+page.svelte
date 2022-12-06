@@ -73,7 +73,7 @@
 
 <h1 class="text-3xl font-bold underline bg-sky-500">Frequency (Hz)</h1>
 <h2 class="text-3xl font-bold underline" id="frequency">{pitch}</h2>
-<h2 class="text-3xl font-bold underline" id="frequency">{notation}</h2>
+<h2 class="text-3xl font-bold underline" id="notatiom">{notation}</h2>
 {#if error}
   <h3>Error: {error}</h3>
 {/if}
