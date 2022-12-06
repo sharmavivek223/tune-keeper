@@ -1,11 +1,82 @@
-<h1 class="text-3xl font-bold underline bg-sky-500">Hello world!</h1>
-<button class="dark:md:hover:bg-fuchsia-600 ..."> Save changes </button>
-<blockquote class="text-2xl font-semibold italic text-center text-slate-900 hover:-skew-y-6">
-  When you look
-  <span
-    class="before:block before:absolute before:-inset-1 hover:before:skew-y-3 before:-skew-y-3 before:bg-pink-500 relative inline-block"
-  >
-    <span class="relative text-white">annoyed</span>
-  </span>
-  all the time, people think that you're busy.
-</blockquote>
+<script>
+  import { onMount } from 'svelte';
+  import { Note } from 'tonal';
+  let audioCtx = null;
+  let analyserNode = null;
+  let microphoneStream = null;
+  let audioData = null;
+  let corrolatedSignal = null;
+  onMount(() => {
+    audioCtx = new window.AudioContext();
+    analyserNode = audioCtx.createAnalyser();
+    audioData = new Float32Array(analyserNode.fftSize);
+    corrolatedSignal = new Float32Array(analyserNode.fftSize);
+  });
+  let localMaxima = new Array(10);
+  let error = '';
+  let pitch = 0;
+  function getAutocorrolatedPitch() {
+    // First: autocorrolate the signal
+
+    let maximaCount = 0;
+
+    for (let l = 0; l < analyserNode.fftSize; l++) {
+      corrolatedSignal[l] = 0;
+      for (let i = 0; i < analyserNode.fftSize - l; i++) {
+        corrolatedSignal[l] += audioData[i] * audioData[i + l];
+      }
+      if (l > 1) {
+        if (
+          corrolatedSignal[l - 2] - corrolatedSignal[l - 1] < 0 &&
+          corrolatedSignal[l - 1] - corrolatedSignal[l] > 0
+        ) {
+          localMaxima[maximaCount] = l - 1;
+          maximaCount++;
+          if (maximaCount >= localMaxima.length) break;
+        }
+      }
+    }
+
+    // Second: find the average distance in samples between maxima
+
+    let maximaMean = localMaxima[0];
+
+    for (let i = 1; i < maximaCount; i++) maximaMean += localMaxima[i] - localMaxima[i - 1];
+
+    maximaMean /= maximaCount;
+
+    return audioCtx.sampleRate / maximaMean;
+  }
+  const startDetection = () => {
+    console.log('started');
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        microphoneStream = audioCtx.createMediaStreamSource(stream);
+        microphoneStream.connect(analyserNode);
+
+        audioData = new Float32Array(analyserNode.fftSize);
+        corrolatedSignal = new Float32Array(analyserNode.fftSize);
+
+        setInterval(() => {
+          analyserNode.getFloatTimeDomainData(audioData);
+
+          pitch = getAutocorrolatedPitch();
+        }, 300);
+      })
+      .catch((err) => {
+        error = err.toString();
+      });
+  };
+  $: notation = Note.fromFreq(pitch);
+</script>
+
+<h1 class="text-3xl font-bold underline bg-sky-500">Frequency (Hz)</h1>
+<h2 class="text-3xl font-bold underline" id="frequency">{pitch}</h2>
+<h2 class="text-3xl font-bold underline" id="frequency">{notation}</h2>
+{#if error}
+  <h3>Error: {error}</h3>
+{/if}
+<button class="dark:md:hover:bg-fuchsia-600" on:click={startDetection}>
+  Start Pitch Detection
+</button>

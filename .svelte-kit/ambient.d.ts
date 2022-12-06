@@ -5,7 +5,7 @@
 /// <reference types="@sveltejs/kit" />
 
 /**
- * Environment variables [loaded by Vite](https://vitejs.dev/guide/env-and-mode.html#env-files) from `.env` files and `process.env`. Like [`$env/dynamic/private`](https://kit.svelte.dev/docs/modules#$env-dynamic-private), this module cannot be imported into public-facing code. This module only includes variables that _do not_ begin with [`config.kit.env.publicPrefix`](https://kit.svelte.dev/docs/configuration#env).
+ * Environment variables [loaded by Vite](https://vitejs.dev/guide/env-and-mode.html#env-files) from `.env` files and `process.env`. Like [`$env/dynamic/private`](https://kit.svelte.dev/docs/modules#$env-dynamic-private), this module cannot be imported into client-side code. This module only includes variables that _do not_ begin with [`config.kit.env.publicPrefix`](https://kit.svelte.dev/docs/configuration#env).
  * 
  * _Unlike_ [`$env/dynamic/private`](https://kit.svelte.dev/docs/modules#$env-dynamic-private), the values exported from this module are statically injected into your bundle at build time, enabling optimisations like dead code elimination.
  * 
@@ -85,6 +85,7 @@ declare module '$env/static/private' {
 	export const npm_config_node_gyp: string;
 	export const XPC_SERVICE_NAME: string;
 	export const _CE_M: string;
+	export const npm_package_dependencies_tonal: string;
 	export const VSCODE_INJECTION: string;
 	export const npm_package_devDependencies_autoprefixer: string;
 	export const npm_package_devDependencies_svelte_check: string;
@@ -128,7 +129,7 @@ declare module '$env/static/public' {
 /**
  * This module provides access to runtime environment variables, as defined by the platform you're running on. For example if you're using [`adapter-node`](https://github.com/sveltejs/kit/tree/master/packages/adapter-node) (or running [`vite preview`](https://kit.svelte.dev/docs/cli)), this is equivalent to `process.env`. This module only includes variables that _do not_ begin with [`config.kit.env.publicPrefix`](https://kit.svelte.dev/docs/configuration#env).
  * 
- * This module cannot be imported into public-facing code.
+ * This module cannot be imported into client-side code.
  * 
  * ```ts
  * import { env } from '$env/dynamic/private';
@@ -198,6 +199,7 @@ declare module '$env/dynamic/private' {
 		npm_config_node_gyp: string;
 		XPC_SERVICE_NAME: string;
 		_CE_M: string;
+		npm_package_dependencies_tonal: string;
 		VSCODE_INJECTION: string;
 		npm_package_devDependencies_autoprefixer: string;
 		npm_package_devDependencies_svelte_check: string;
@@ -223,6 +225,7 @@ declare module '$env/dynamic/private' {
 		COLORTERM: string;
 		npm_node_execpath: string;
 		NODE_ENV: string;
+		[key: `PUBLIC_${string}`]: undefined;
 		[key: string]: string | undefined;
 	}
 }
@@ -239,6 +242,6 @@ declare module '$env/dynamic/private' {
  */
 declare module '$env/dynamic/public' {
 	export const env: {
-		[key: string]: string | undefined;
+		[key: `PUBLIC_${string}`]: string | undefined;
 	}
 }
