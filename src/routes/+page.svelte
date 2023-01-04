@@ -1,15 +1,16 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import { Note } from 'tonal';
-  let audioCtx = null;
-  let analyserNode = null;
-  let microphoneStream = null;
-  let audioData = null;
-  let corrolatedSignal = null;
-  let localMaxima = new Array(10);
-  let error = '';
+  let audioCtx: AudioContext;
+  let analyserNode: AnalyserNode;
+  let microphoneStream: MediaStreamAudioSourceNode;
+  let audioData: Float32Array;
+  let corrolatedSignal: Float32Array;
+  let localMaxima: number[] = new Array(10);
+  let error: string;
   let pitch = 0;
-  function getAutocorrolatedPitch() {
+  let fileData: any;
+  const getAutoCorrolatedPitch = (): number => {
     // First: autocorrolate the signal
 
     let maximaCount = 0;
@@ -40,7 +41,7 @@
     maximaMean /= maximaCount;
 
     return audioCtx.sampleRate / maximaMean;
-  }
+  };
   const startDetection = () => {
     console.log('started');
     audioCtx = new window.AudioContext();
@@ -59,7 +60,7 @@
         setInterval(() => {
           analyserNode.getFloatTimeDomainData(audioData);
 
-          pitch = getAutocorrolatedPitch();
+          pitch = getAutoCorrolatedPitch();
         }, 300);
       })
       .catch((err) => {
@@ -67,6 +68,33 @@
       });
   };
   $: notation = Note.fromFreq(pitch);
+  let audioFile: any;
+
+  const handleChange = async (event: any) => {
+    audioFile = event.target.files[0];
+    audioFile = await audioFile.arrayBuffer();
+    const audioContext = new AudioContext();
+
+    // Load the audio file into the audio context
+    const audioBuffer = await audioContext.decodeAudioData(audioFile);
+
+    // Create an analyser node
+    const analyser = audioContext.createAnalyser();
+
+    // Connect the audio buffer to the analyser node
+    const source = audioContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(analyser);
+
+    // Start the audio
+    source.start();
+
+    // Extract the pitch data from the audio
+    fileData = new Uint8Array(analyser.frequencyBinCount);
+    console.log(analyser.getByteFrequencyData(fileData));
+    // You can now use the `audioFile` variable to do something with the uploaded audio file,
+    // such as sending it to a server for storage or playback.
+  };
 </script>
 
 <h1 class="text-3xl font-bold underline bg-sky-500">Frequency (Hz)</h1>
@@ -78,3 +106,5 @@
 <button class="dark:md:hover:bg-fuchsia-600" on:click={startDetection}>
   Start Pitch Detection
 </button>
+<input type="file" accept="audio/*" bind:value={audioFile} on:change={handleChange} />
+<pre>{JSON.stringify(fileData,null,4)}</pre>
